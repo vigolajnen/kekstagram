@@ -11,16 +11,6 @@ function randomInt(min, max) {
 var gallery = document.querySelector('.gallery-overlay');
 gallery.classList.remove('hidden');
 
-var usersPhotos = [];
-usersPhotos.length = 25;
-for (var i = 0; i < usersPhotos.length; i++) {
-  usersPhotos[i] = {
-    url: '../kekstagram/photos/' + i + '.jpg',
-    comment: COMMENTS_PHRASES[commentsPhotosRandIndex],
-    like: randomInt(15, 200)
-  };
-}
-
 var renderUserPhoto = function (usersPhotos) {
   var photoElement = gallery.cloneNode(true);
   photoElement.querySelector('.gallery-overlay-preview > img').setAttribute('src', usersPhotos.url);
@@ -30,7 +20,14 @@ var renderUserPhoto = function (usersPhotos) {
 };
 
 var fragment = document.createDocumentFragment();
+var usersPhotos = [];
+usersPhotos.length = 25;
 for (var j = 1; j < usersPhotos.length; j++) {
+  usersPhotos[j] = {
+    url: '../kekstagram/photos/' + j + '.jpg',
+    comment: COMMENTS_PHRASES[commentsPhotosRandIndex],
+    like: randomInt(15, 200)
+  };
   fragment.appendChild(renderUserPhoto(usersPhotos[j]));
 }
 gallery.appendChild(fragment);
