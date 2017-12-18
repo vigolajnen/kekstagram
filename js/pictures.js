@@ -1,7 +1,10 @@
 'use strict';
 
 var COMMENTS_PHRASES = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 var gallery = document.querySelector('.gallery-overlay');
+var galleryClose = gallery.querySelector('.gallery-overlay-close');
 
 // генерация случайных чисел в интервале
 function randomInt(min, max) {
@@ -15,9 +18,9 @@ var createRandomComments = function (comment) {
   var countComment = randomInt(1, 2);
   if (countComment === 1) {
     commentsArray.push(comment[randomInt(0, comment.length - 1)]);
-    } else {
+  } else {
     for (var k = 1; k <= 2; k++) {
-    commentsArray.push(comment[randomInt(0, comment.length - 1)]);
+      commentsArray.push(comment[randomInt(0, comment.length - 1)]);
     }
   }
   return commentsArray;
@@ -37,7 +40,7 @@ var createUserPhotos = function (count) {
 };
 
 // создания DOM - элемента
-  var renderUserPhoto = function (usersPhoto) {
+var renderUserPhoto = function (usersPhoto) {
   var template = document.querySelector('#picture-template');
   var pictureTemplate = template.content.querySelector('.picture');
   var photoElement = pictureTemplate.cloneNode(true);
@@ -46,21 +49,25 @@ var createUserPhotos = function (count) {
   photoElement.querySelector('.picture-comments').textContent = usersPhoto['comments'].length;
   photoElement.querySelector('.picture-likes').textContent = usersPhoto.likes;
 
-  renderUserPhotoBig(usersPhoto);
-  gallery.classList.remove('hidden');
+  photoElement.addEventListener('click', function (event) {
+    event.preventDefault();
+    renderUserPhotoBig(usersPhoto);
+    openGallery();
+    galleryClose.focus();
+  });
 
   return photoElement;
 };
 
 // заполнение блока на основе созданных DOM - элементов
-  var fillUserPhoto = function (photos) {
-    var pictures = document.querySelector('.pictures');
-    var fragment = document.createDocumentFragment();
-    for (var i = 0; i < photos.length; i++) {
-      fragment.appendChild(renderUserPhoto(photos[i]));
-    }
-    pictures.appendChild(fragment);
-  };
+var fillUserPhoto = function (photos) {
+  var pictures = document.querySelector('.pictures');
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < photos.length; i++) {
+    fragment.appendChild(renderUserPhoto(photos[i]));
+  }
+  pictures.appendChild(fragment);
+};
 
 var renderUserPhotoBig = function (photos) {
   gallery.querySelector('img').setAttribute('src', photos.url);
@@ -71,5 +78,30 @@ var renderUserPhotoBig = function (photos) {
 var galleryRender = function () {
   fillUserPhoto(createUserPhotos(25));
 };
-  galleryRender();
+galleryRender();
 
+var onPopupEsc = function (event) {
+  if (event.keyCode === ESC_KEYCODE) {
+    closeGallery();
+  }
+};
+
+var openGallery = function () {
+  gallery.classList.remove('hidden');
+  document.addEventListener('keydown', onPopupEsc);
+};
+
+var closeGallery = function () {
+  gallery.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEsc);
+};
+
+galleryClose.addEventListener('click', function () {
+  closeGallery();
+});
+
+galleryClose.addEventListener('keydown', function (event) {
+  if (event.keyCode === ENTER_KEYCODE) {
+    closeGallery();
+  }
+});
