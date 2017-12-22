@@ -18,10 +18,10 @@ var createRandomComments = function (comment) {
   var commentsArray = [];
   var countComment = randomInt(1, 2);
   if (countComment === 1) {
-   commentsArray.push(comment[randomInt(comment.length - 1)]);
+    commentsArray.push(comment[randomInt(comment.length - 1)]);
   } else {
     for (var k = 1; k <= 2; k++) {
-     commentsArray.push(comment[randomInt(comment.length - 1)]);
+      commentsArray.push(comment[randomInt(comment.length - 1)]);
     }
   }
   return commentsArray;
@@ -30,8 +30,8 @@ var createRandomComments = function (comment) {
 // генерация фотографий
 var createUserPhotos = function (count) {
   var usersPhotos = [];
-    for (var j = 0; j < count; j++) {
-      usersPhotos[j] = {
+  for (var j = 0; j < count; j++) {
+    usersPhotos[j] = {
       url: '../kekstagram/photos/' + (j + 1) + '.jpg',
       likes: randomInt(15, 200),
       comments: createRandomComments(COMMENTS_PHRASES)
