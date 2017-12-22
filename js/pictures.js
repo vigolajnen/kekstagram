@@ -15,6 +15,19 @@ function randomInt(min, max) {
   return rand;
 }
 
+var createRandomComments = function (comment) {
+  var commentsArray = [];
+  var countComment = randomInt(1, 2);
+  if (countComment === 1) {
+    commentsArray.push(comment[randomInt(0, comment.length - 1)]);
+  } else {
+    for (var k = 1; k <= 2; k++) {
+      commentsArray.push(comment[randomInt(0, comment.length - 1)]);
+    }
+  }
+  return commentsArray;
+};
+
 var usersPhotos = [];
 usersPhotos.length = 25;
 for (var j = 0; j < 25; j++) {
@@ -22,7 +35,7 @@ for (var j = 0; j < 25; j++) {
   usersPhotos[j] = {
     url: '../kekstagram/photos/' + (j + 1) + '.jpg',
     likes: randomInt(15, 200),
-    comments: COMMENTS_PHRASES
+    comments: createRandomComments(COMMENTS_PHRASES)
   };
 }
 
@@ -31,11 +44,12 @@ var renderUserPhoto = function (usersPhoto) {
 
   photoElement.setAttribute('href', usersPhoto.url);
   photoElement.querySelector('img').setAttribute('src', usersPhoto.url);
-  photoElement.querySelector('.picture-comments').textContent = usersPhoto['comments'].length = randomInt(1, 2);
+  photoElement.querySelector('.picture-comments').textContent = usersPhoto['comments'].length;
   photoElement.querySelector('.picture-likes').textContent = usersPhoto.likes;
 
   return photoElement;
 };
+
 var fragment = document.createDocumentFragment();
 for (var i = 0; i < usersPhotos.length; i++) {
   fragment.appendChild(renderUserPhoto(usersPhotos[i]));
@@ -46,7 +60,7 @@ var renderUserPhotoGallery = function (usersPhotoGallery) {
   var photoElement = galleryPreview.cloneNode(true);
 
   photoElement.querySelector('img').setAttribute('src', usersPhotoGallery.url);
-  photoElement.querySelector('.comments-count').textContent = usersPhotoGallery.comments;
+  photoElement.querySelector('.comments-count').textContent = usersPhotoGallery['comments'].length;
   photoElement.querySelector('.likes-count').textContent = usersPhotoGallery.likes;
 
   return photoElement;
@@ -55,3 +69,4 @@ var renderUserPhotoGallery = function (usersPhotoGallery) {
 var fragmentGallery = document.createDocumentFragment();
 fragmentGallery.appendChild(renderUserPhotoGallery(usersPhotos[0]));
 gallery.replaceChild(fragmentGallery, gallery.childNodes[3]);
+
