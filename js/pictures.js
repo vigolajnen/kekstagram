@@ -49,6 +49,7 @@ var renderUserPhoto = function (usersPhoto) {
 
   return photoElement;
 };
+
 var fragment = document.createDocumentFragment();
 for (var i = 0; i < usersPhotos.length; i++) {
   fragment.appendChild(renderUserPhoto(usersPhotos[i]));
