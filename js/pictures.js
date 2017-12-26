@@ -106,3 +106,96 @@ galleryClose.addEventListener('keydown', function (event) {
     closeGallery();
   }
 });
+
+
+// Показ/скрытие формы кадрирования
+var formUpload = document.querySelector('.upload-overlay');
+var formOpen = document.querySelector('#upload-file');
+var formClose = document.querySelector('.upload-form-cancel');
+var onFormEsc = function (event) {
+  if (event.keyCode === ESC_KEYCODE) {
+    closeForm();
+  }
+};
+
+var openForm = function () {
+  formUpload.classList.remove('hidden');
+  document.addEventListener('keydown', onFormEsc);
+};
+
+var closeForm = function () {
+  formUpload.classList.add('hidden');
+  document.addEventListener('keydown', onFormEsc);
+};
+
+formOpen.addEventListener('change', function () {
+  openForm();
+  formClose.focus();
+});
+
+formClose.addEventListener('click', function () {
+  closeForm();
+});
+
+formClose.addEventListener('keydown', function (event) {
+  if (event.keyCode === ENTER_KEYCODE) {
+    closeForm();
+  }
+});
+
+// изменение масштаба изображения
+var getScale = function () {
+  var scale = document.querySelector('.upload-resize-controls-value');
+  var controlsButtonInc = document.querySelector('.upload-resize-controls-button-inc');
+  var controlsButtonDec = document.querySelector('.upload-resize-controls-button-dec');
+  var effect = document.querySelector('.effect-image-preview');
+  var units = scale.value.replace(/\d/g, '');
+
+  controlsButtonInc.addEventListener('click', function () {
+
+    if (parseInt(scale.value, 10) <= 75) {
+      scale.value = parseInt(scale.value, 10) + 25 + units;
+      effect.style.transform = 'scale(' + parseInt(scale.value, 10) / 100 + ')';
+    }
+  });
+
+  controlsButtonDec.addEventListener('click', function () {
+    if (parseInt(scale.value, 10) > 25) {
+      scale.value = parseInt(scale.value, 10) - 25 + units;
+      effect.style.transform = 'scale(' + parseInt(scale.value, 10) / 100 + ')';
+    }
+  });
+};
+
+getScale();
+
+// добавление эффекта по клику
+var getEffect = function () {
+  var effectBlock = document.querySelector('.upload-effect-controls');
+
+  effectBlock.addEventListener('click', function (event) {
+    var effectImagePreview = document.querySelector('.effect-image-preview');
+    var target = event.target;
+    var label = target.parentNode.getAttribute('for');
+    effectImagePreview.setAttribute('class', label.replace('upload-', '').concat(' effect-image-preview'));
+  });
+};
+
+getEffect();
+
+// Хэш-теги
+var hashtags = document.querySelector('.upload-form-hashtags');
+hashtags.addEventListener('change', function () {
+  var hashtagsMess = hashtags.value.toLowerCase();
+  var arrayOfStrings = hashtagsMess.split(' ');
+  for (var i = 0; i < arrayOfStrings.length; i++) {
+    if ((arrayOfStrings.length <= 5) &&
+      (arrayOfStrings[i].charAt(0) === '#') &&
+      (arrayOfStrings[i].length <= 20) &&
+      (arrayOfStrings[i] !== arrayOfStrings[i - 1])) {
+      return arrayOfStrings[i];
+    }
+    hashtags.setAttribute('style', 'border-color: red;');
+  }
+  return arrayOfStrings[i];
+});
